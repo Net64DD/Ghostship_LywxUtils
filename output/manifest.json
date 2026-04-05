@@ -1,0 +1,10 @@
+{
+    "name": "LywxUtils",
+    "main": "build.gen",
+    "version": "1.0.0",
+    "website": "https://github.com/Net64DD/Ghostship_LywxUtils.git",
+    "description": "A utility mod for Ghostship",
+    "author": "Lywx & Net64DD",
+    "license": "MIT",
+    "code-version": 1
+}
