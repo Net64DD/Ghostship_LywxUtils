@@ -22,7 +22,7 @@ HM_API struct Object* SpawnObject(ModelID modelId, const BehaviorScript* behavio
 
 HM_API ModelID RegisterModel(const char* name, const void* data, LoadedModelType type, ModelVisibility visibility) {
     ModelID modelId = MODEL_BASE + gLoadedModels.size;
-    LoadedModel instance = { .name = name, .type = type, .model = data, .visibility = visibility };
+    LoadedModel instance = { .name = name, .type = type, .model = data, .id = modelId, .visibility = visibility };
 
     Array_Push(&gLoadedModels, &instance);
     return modelId;
@@ -38,13 +38,17 @@ HM_API LoadedModel* GetModelByName(const char* name) {
     return NULL;
 }
 
-HM_API LoadedModel* GetAllModels() {
-    LoadedModel* models[gLoadedModels.size + 1];
-    for (size_t i = 0; i < gLoadedModels.size; i++) {
-        models[i] = (LoadedModel*)Array_Get(&gLoadedModels, i);
+HM_API LoadedModel* GetModelByIdx(uint32_t idx) {
+    if (idx >= gLoadedModels.size) {
+        return NULL;
     }
-    models[gLoadedModels.size] = NULL;
-    return (LoadedModel*) models;
+    return (LoadedModel*)Array_Get(&gLoadedModels, idx);
+}
+
+HM_API void GetAllModels(LoadedModel** out) {
+    for (size_t i = 0; i < gLoadedModels.size; i++) {
+        out[i] = (LoadedModel*)Array_Get(&gLoadedModels, i);
+    }
 }
 
 HM_API uint32_t GetModelCount() {

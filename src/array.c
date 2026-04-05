@@ -1,5 +1,8 @@
 #include "mod.h"
 #include "array.h"
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 HM_API void Array_Init(GenericArray *arr, size_t initialCapacity, size_t element_size) {
     arr->data = malloc(initialCapacity * element_size);
