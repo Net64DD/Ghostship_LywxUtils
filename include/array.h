@@ -1,5 +1,6 @@
 #pragma once
 
+#include "mod.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -11,12 +12,12 @@ typedef struct {
     size_t element_size;
 } GenericArray;
 
-extern void Array_Init(GenericArray *arr, size_t initialCapacity, size_t element_size);
-extern void Array_Push(GenericArray *arr, void *element);
-extern void *Array_Get(GenericArray *arr, size_t index);
-extern void Array_Set(GenericArray *arr, size_t index, void *element);
-extern void Array_Remove(GenericArray *arr, size_t index);
-extern void Array_Free(GenericArray *arr);
+HM_API extern void Array_Init(GenericArray *arr, size_t initialCapacity, size_t element_size);
+HM_API extern void Array_Push(GenericArray *arr, void *element);
+HM_API extern void *Array_Get(GenericArray *arr, size_t index);
+HM_API extern void Array_Set(GenericArray *arr, size_t index, void *element);
+HM_API extern void Array_Remove(GenericArray *arr, size_t index);
+HM_API extern void Array_Free(GenericArray *arr);
 
 #define Array_InitSymbol "Array_Init"
 #define Array_PushSymbol "Array_Push"

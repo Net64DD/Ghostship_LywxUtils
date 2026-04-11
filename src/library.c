@@ -4,13 +4,14 @@
 #include "array.h"
 #include "game/object_helpers.h"
 #include "port/events/Events.h"
+#include "game/level_update.h"
+#include "engine/level_script.h"
 
 #define MODEL_BASE 0xE1
 
 static GenericArray gLoadedModels;
 static ListenerID gLoadAreaListenerID;
 
-extern struct AllocOnlyPool *sLevelPool;
 extern void LoadModel(uint16_t modelId, const void* data, LoadedModelType type);
 
 HM_API struct Object* SpawnObject(ModelID modelId, const BehaviorScript* behavior, s16 x, s16 y, s16 z, s32 param) {
@@ -55,7 +56,7 @@ HM_API uint32_t GetModelCount() {
     return (uint32_t) gLoadedModels.size;
 }
 
-void OnLoadArea(void* ev) {
+void OnLoadArea(IEvent* ev) {
     for (size_t i = 0; i < gLoadedModels.size; i++) {
         LoadedModel* loadedModel = (LoadedModel*)Array_Get(&gLoadedModels, i);
         LoadModel(MODEL_BASE + i, loadedModel->model, loadedModel->type);
@@ -71,16 +72,20 @@ void LoadModel(uint16_t modelId, const void* data, LoadedModelType type) {
             gLoadedGraphNodes[modelId] = process_geo_layout(sLevelPool, data);
             break;
         default:
-            printf("Unknown model type for model ID %d\n", modelId);
+            LUSLOG_ERROR("Unknown model type for model ID %d\n", modelId);
     }
 }
 
 MOD_INIT() {
+    LUSLOG_INFO("%s", "Initializing internal model registry");
     Array_Init(&gLoadedModels, 16, sizeof(LoadedModel));
+    LUSLOG_INFO("%s", "Registering event listeners");
     gLoadAreaListenerID = REGISTER_LISTENER(LevelScriptBeginArea, EVENT_PRIORITY_NORMAL, OnLoadArea);
+    LUSLOG_INFO("%s", "Initialization complete");
 }
 
 MOD_EXIT() {
+    LUSLOG_INFO("%s", "Exiting LywxUtils");
     UNREGISTER_LISTENER(LevelScriptBeginArea, gLoadAreaListenerID);
     Array_Free(&gLoadedModels);
 }
